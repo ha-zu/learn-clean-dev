@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  db:
+    image: mysql:8.0
+    # build container restart mysql.
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=clean-dev
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ='Asia/Tokyo'
+      # setting locales
+      - LANG=C.UTF-8
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci

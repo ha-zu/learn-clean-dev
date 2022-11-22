@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Docker mysql files
+.docker/.env
+.docker/db/data
+# initial data sample SQL
+.docker/db/sql
