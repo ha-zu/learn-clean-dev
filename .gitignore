@@ -19,3 +19,6 @@
 .docker/db/data
 # initial data sample SQL
 .docker/db/sql
+
+# server env
+src/configs/.env

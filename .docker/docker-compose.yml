@@ -19,3 +19,17 @@ services:
       - "3306:3306"
       - "33060:33060"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  server:
+    build:
+      context: .
+      dockerfile: ../src/build/Dockerfile
+    volumes:
+      - ../:/go/src/github.com/ha-zu/learn-clean-dev
+      - ignore-volumes:/go/src/github.com/ha-zu/learn-clean-dev/.docker
+    ports:
+      - 1323:1323
+    command: /bin/bash
+    tty: true
+
+volumes:
+  ignore-volumes:
