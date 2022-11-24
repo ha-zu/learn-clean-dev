@@ -1,11 +1,11 @@
 package configs
 
-import(
-	"runtime"
+import (
 	"path/filepath"
+	"runtime"
 )
 
 var (
-	_, f, _, _ = runtime.Caller(0)
+	_, f, _, _          = runtime.Caller(0)
 	ProjectConfigrePath = filepath.Join(f, "../")
 )
