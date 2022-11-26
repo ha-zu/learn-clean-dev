@@ -16,3 +16,4 @@ COPY ./src ./src
 RUN go build -o ${BUILD} ${MAIN}/main.go
 
 CMD ["./src/build/cleanarchitecture"]
+# CMD [ "/bin/bash" ]

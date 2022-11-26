@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ha-zu/learn-clean-dev/src/configs"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,9 +12,9 @@ import (
 
 func main() {
 
-	err := godotenv.Load(configs.ProjectConfigrePath + "/.env")
+	err := godotenv.Load("src/configs/.env")
 	if err != nil {
-		log.Fatalf("Error Loading env %v", err)
+		log.Fatalf("Error Configer Loading env %v", err)
 	}
 
 	e := echo.New()
@@ -23,8 +22,12 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{os.Getenv("HOST") + ":" + os.Getenv("PORT")},
-		AllowMethods: []string{http.MethodGet},
+		AllowOrigins: []string{
+			os.Getenv("LOCALHOST"),
+		},
+		AllowMethods: []string{
+			http.MethodGet,
+		},
 	}))
 
 	e.GET("/healthcheck", func(c echo.Context) error {

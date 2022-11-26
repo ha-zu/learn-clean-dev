@@ -16,12 +16,7 @@
 
 # Docker mysql files
 .docker/.env
-.docker/db/data
-# initial data sample SQL
-.docker/db/sql
 
-# server env
+# ignore go project
 src/configs/.env
-
-# Build files
 src/build/

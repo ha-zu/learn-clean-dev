@@ -13,18 +13,17 @@ services:
       # setting locales
       - LANG=C.UTF-8
     volumes:
-      - ./db/data:/var/lib/mysql
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - db_store:/var/lib/mysql
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
   server:
     build:
       context: ../
     volumes:
       - ../:/go/src/github.com/ha-zu/learn-clean-dev
-      - ignore-volumes:/go/src/github.com/ha-zu/learn-clean-dev/.docker
     ports:
       - 1323:1323
     tty: true
 
 volumes:
-  ignore-volumes:
+  db_store:
