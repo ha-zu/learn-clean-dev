@@ -22,3 +22,6 @@
 
 # server env
 src/configs/.env
+
+# Build files
+src/build/
