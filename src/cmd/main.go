@@ -28,7 +28,7 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
-			cnf.DevDomain,
+			cnf.DevUrl,
 		},
 		AllowMethods: []string{
 			http.MethodGet,

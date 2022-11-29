@@ -9,8 +9,8 @@ import (
 
 func TestNew(t *testing.T) {
 	// Env setting struct testing
-	wantDomain := "http:localhost:1323"
-	t.Setenv("DEV_DOMAIN", wantDomain)
+	wantURL := "http:localhost:1323"
+	t.Setenv("DEV_URL", wantURL)
 
 	wantPort := "1323"
 	t.Setenv("DEV_PORT", wantPort)
@@ -20,7 +20,7 @@ func TestNew(t *testing.T) {
 		t.Fatalf("Can not configs Load: %v", err)
 	}
 
-	if cnf.DevDomain != wantDomain {
+	if cnf.DevUrl != wantURL {
 		t.Fatal("Do not match development domain")
 	}
 
@@ -33,8 +33,8 @@ func TestNew(t *testing.T) {
 func TestEnvSetting(t *testing.T) {
 	// Setenv check testing
 	compere := map[string]string{
-		"DEV_DOMAIN": "http:localhost:1323",
-		"DEV_PORT":   "1323",
+		"DEV_URL":  "http:localhost:1323",
+		"DEV_PORT": "1323",
 	}
 
 	t.Run("SetEnv list testing", func(t *testing.T) {
@@ -50,8 +50,8 @@ func TestEnvSetting(t *testing.T) {
 func TestEnvLists(t *testing.T) {
 	// Get EnvLists testing
 	compere := map[string]string{
-		"DEV_DOMAIN": "http:localhost:1323",
-		"DEV_PORT":   "1323",
+		"DEV_URL":  "http:localhost:1323",
+		"DEV_PORT": "1323",
 	}
 
 	t.Run("Get env lists testing", func(t *testing.T) {

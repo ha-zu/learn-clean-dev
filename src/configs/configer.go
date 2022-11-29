@@ -5,8 +5,8 @@ import (
 )
 
 type Config struct {
-	DevDomain string `envconfig:"DEV_DOMAIN" default:"http:localhost:8080"`
-	DevPort   string `envconfig:"DEV_PORT" default:"8080"`
+	DevUrl  string `envconfig:"DEV_URL" default:"http:localhost:8080"`
+	DevPort string `envconfig:"DEV_PORT" default:"8080"`
 }
 
 func New() (*Config, error) {
