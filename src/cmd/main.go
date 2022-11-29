@@ -5,16 +5,21 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/ha-zu/learn-clean-dev/src/configs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
+func init() {
+	configs.EnvSetting()
+}
+
 func main() {
 
-	err := godotenv.Load("src/configs/.env")
+	cnf, err := configs.New()
 	if err != nil {
-		log.Fatalf("Error Configer Loading env %v", err)
+		log.Fatalf("Configer New Error: %v", err)
+		os.Exit(1)
 	}
 
 	e := echo.New()
@@ -23,7 +28,7 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
-			os.Getenv("LOCALHOST"),
+			cnf.DevDomain,
 		},
 		AllowMethods: []string{
 			http.MethodGet,
@@ -40,5 +45,6 @@ func main() {
 		})
 	})
 
-	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
+	//ToDo setting port statement
+	e.Logger.Fatal(e.Start(":" + cnf.DevPort))
 }
