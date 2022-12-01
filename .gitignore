@@ -18,5 +18,6 @@
 .docker/.env
 
 # ignore go project
-src/configs/env.go
+src/config/env.go
+src/config/env_test.go
 src/build/

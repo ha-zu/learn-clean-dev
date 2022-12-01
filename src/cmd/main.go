@@ -1,26 +1,14 @@
 package main
 
 import (
-	"log"
 	"net/http"
-	"os"
 
-	"github.com/ha-zu/learn-clean-dev/src/configs"
+	cnf "github.com/ha-zu/learn-clean-dev/src/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func init() {
-	configs.EnvSetting()
-}
-
 func main() {
-
-	cnf, err := configs.New()
-	if err != nil {
-		log.Fatalf("Configer New Error: %v", err)
-		os.Exit(1)
-	}
 
 	e := echo.New()
 
@@ -28,7 +16,7 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
-			cnf.DevUrl,
+			cnf.Env.DevURL,
 		},
 		AllowMethods: []string{
 			http.MethodGet,
@@ -46,5 +34,5 @@ func main() {
 	})
 
 	//ToDo setting port statement
-	e.Logger.Fatal(e.Start(":" + cnf.DevPort))
+	e.Logger.Fatal(e.Start(":" + cnf.Env.DevPort))
 }
