@@ -39,7 +39,7 @@ func NewSkill(id string, tagID tag.TagID, userID user.UserID, evaluate, year int
 	}, nil
 }
 
-func (s *Skill) ChangeEvaluatee(evaluate int) error {
+func (s *Skill) ChangeEvaluate(evaluate int) error {
 
 	if evaluate < 1 || evaluate > 5 {
 		return vo.ErrOutOfRange
