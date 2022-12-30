@@ -15,7 +15,7 @@ type MenteeRecruitentPlanContract struct {
 	message                string
 }
 
-const MENTEE_CONTRACT_MESSAGE_MAX_LEN = 500
+const MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN = 500
 
 func NewMenteeRecruitentPlanContract(id, message string, mtrpID mr.MenteeRecruitmentPlanID, mentorID user.UserID) (*MenteeRecruitentPlanContract, error) {
 
@@ -24,7 +24,7 @@ func NewMenteeRecruitentPlanContract(id, message string, mtrpID mr.MenteeRecruit
 		return nil, err
 	}
 
-	if l := utf8.RuneCountInString(message); l > MENTEE_CONTRACT_MESSAGE_MAX_LEN {
+	if l := utf8.RuneCountInString(message); l > MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
@@ -38,7 +38,7 @@ func NewMenteeRecruitentPlanContract(id, message string, mtrpID mr.MenteeRecruit
 
 func (m *MenteeRecruitentPlanContract) ChangeMenteeRecruitentPlanContractMessage(message string) error {
 
-	if l := utf8.RuneCountInString(message); l > MENTEE_CONTRACT_MESSAGE_MAX_LEN {
+	if l := utf8.RuneCountInString(message); l > MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN {
 		return vo.ErrValueIsTooLong
 	}
 

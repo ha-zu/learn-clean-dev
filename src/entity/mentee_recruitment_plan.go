@@ -26,9 +26,9 @@ type MenteeRecruitmentPlan struct {
 }
 
 const (
-	MENTEE_DESCRIPTION_MAX_LEN = 2000
-	MENTEE_TITLE_MAX_LEN       = 255
-	MENTEE_PLAN_MAX_DATE       = 14
+	MENTEE_PLAN_DESCRIPTION_MAX_LEN = 2000
+	MENTEE_PLAN_TITLE_MAX_LEN       = 255
+	MENTEE_PLAN_MAX_DATE            = 14
 )
 
 func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat string, price_from, price_to int,
@@ -43,7 +43,7 @@ func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat s
 		return nil, vo.ErrEmptyValue
 	}
 
-	if l := utf8.RuneCountInString(title); l > MENTEE_TITLE_MAX_LEN {
+	if l := utf8.RuneCountInString(title); l > MENTEE_PLAN_TITLE_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
@@ -71,7 +71,7 @@ func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat s
 		return nil, vo.ErrEmptyValue
 	}
 
-	if l := utf8.RuneCountInString(desc); l > MENTEE_DESCRIPTION_MAX_LEN {
+	if l := utf8.RuneCountInString(desc); l > MENTEE_PLAN_DESCRIPTION_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
@@ -112,6 +112,14 @@ func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat s
 }
 
 func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanDescription(desc string) error {
+
+	if desc == "" {
+		return vo.ErrEmptyValue
+	}
+
+	if l := utf8.RuneCountInString(desc); l > MENTEE_PLAN_DESCRIPTION_MAX_LEN {
+		return vo.ErrValueIsTooLong
+	}
 
 	m.description = desc
 

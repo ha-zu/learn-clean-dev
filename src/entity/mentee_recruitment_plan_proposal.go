@@ -15,7 +15,7 @@ type MenteeRecruitentPlanProposal struct {
 	proposal string
 }
 
-const MENTEE_RECRUITMENT_PROPOSAL_MAX_LEN = 2000
+const MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN = 2000
 
 func NewMenteeRecruitentPlanProposal(id, proposal string, mrpID mr.MenteeRecruitmentPlanID, mentorID user.UserID) (*MenteeRecruitentPlanProposal, error) {
 
@@ -30,7 +30,7 @@ func NewMenteeRecruitentPlanProposal(id, proposal string, mrpID mr.MenteeRecruit
 		return nil, vo.ErrEmptyValue
 	}
 
-	if l := utf8.RuneCountInString(proposal); l > MENTEE_RECRUITMENT_PROPOSAL_MAX_LEN {
+	if l := utf8.RuneCountInString(proposal); l > MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
@@ -43,6 +43,16 @@ func NewMenteeRecruitentPlanProposal(id, proposal string, mrpID mr.MenteeRecruit
 }
 
 func (m *MenteeRecruitentPlanProposal) ChangeMenteeRecruitentPlanProposal(proposal string) error {
+
+	if proposal == "" {
+		return vo.ErrEmptyValue
+	}
+
+	if l := utf8.RuneCountInString(proposal); l > MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN {
+		return vo.ErrValueIsTooLong
+	}
+
+	m.proposal = proposal
 
 	return nil
 

@@ -18,8 +18,8 @@ type User struct {
 }
 
 const (
-	USER_NAME_MAX_LEN = 255
-	PROFILE_MAX_LEN   = 2000
+	USER_NAME_MAX_LEN    = 255
+	USER_PROFILE_MAX_LEN = 2000
 )
 
 func NewUser(id, name, email, password, profile string, skill []Skill, resume []Resume) (*User, error) {
@@ -47,7 +47,7 @@ func NewUser(id, name, email, password, profile string, skill []Skill, resume []
 		return nil, err
 	}
 
-	if l := utf8.RuneCountInString(profile); l > PROFILE_MAX_LEN {
+	if l := utf8.RuneCountInString(profile); l > USER_PROFILE_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
@@ -87,7 +87,7 @@ func (u *User) ChangeProfile(profile string) error {
 		return vo.ErrEmptyValue
 	}
 
-	if l := utf8.RuneCountInString(profile); l > USER_NAME_MAX_LEN {
+	if l := utf8.RuneCountInString(profile); l > USER_PROFILE_MAX_LEN {
 		return vo.ErrValueIsTooLong
 	}
 

@@ -18,8 +18,8 @@ type Resume struct {
 }
 
 const (
-	DESCRIPTION_MAX_LEN = 1000
-	BASE_YEAR           = 1970
+	RESUME_DESCRIPTION_MAX_LEN = 1000
+	RESUME_BASE_YEAR           = 1970
 )
 
 func NewResume(id, description string, userID user.UserID, from, to int) (*Resume, error) {
@@ -29,15 +29,15 @@ func NewResume(id, description string, userID user.UserID, from, to int) (*Resum
 		return nil, err
 	}
 
-	if utf8.RuneCountInString(description) > DESCRIPTION_MAX_LEN {
+	if utf8.RuneCountInString(description) > RESUME_DESCRIPTION_MAX_LEN {
 		return nil, vo.ErrValueIsTooLong
 	}
 
-	if from < BASE_YEAR {
+	if from < RESUME_BASE_YEAR {
 		return nil, vo.ErrOutOfRange
 	}
 
-	if to < BASE_YEAR || from < to {
+	if to < RESUME_BASE_YEAR || from < to {
 		return nil, vo.ErrOutOfRange
 	}
 
@@ -52,7 +52,7 @@ func NewResume(id, description string, userID user.UserID, from, to int) (*Resum
 
 func (r *Resume) ChangeDesctiption(desc string, ud time.Time) error {
 
-	if utf8.RuneCountInString(desc) > DESCRIPTION_MAX_LEN {
+	if utf8.RuneCountInString(desc) > RESUME_DESCRIPTION_MAX_LEN {
 		return vo.ErrValueIsTooLong
 	}
 
@@ -63,7 +63,7 @@ func (r *Resume) ChangeDesctiption(desc string, ud time.Time) error {
 
 func (r *Resume) ChangeFrom(from int, ud time.Time) error {
 
-	if from < BASE_YEAR {
+	if from < RESUME_BASE_YEAR {
 		return vo.ErrOutOfRange
 	}
 
@@ -74,7 +74,7 @@ func (r *Resume) ChangeFrom(from int, ud time.Time) error {
 
 func (r *Resume) ChangeTo(to int, ud time.Time) error {
 
-	if to < BASE_YEAR || r.from < to {
+	if to < RESUME_BASE_YEAR || r.from < to {
 		return vo.ErrOutOfRange
 	}
 
