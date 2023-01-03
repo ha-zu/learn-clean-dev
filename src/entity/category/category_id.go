@@ -4,13 +4,11 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type CategoryID string
 
-func CategoryIDValidate(id string) (*CategoryID, error) {
+func NewCategoryID(id CategoryID) error {
 
 	if id == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	cID := CategoryID(id)
-
-	return &cID, nil
+	return nil
 }

@@ -4,14 +4,12 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type CategoryName string
 
-func CategoryNameValidate(name string) (*CategoryName, error) {
+func NewCategoryName(name CategoryName) error {
 
 	if name == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	custName := CategoryName(name)
-
-	return &custName, nil
+	return nil
 
 }

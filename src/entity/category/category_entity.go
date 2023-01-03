@@ -1,25 +1,25 @@
 package category
 
 type Category struct {
-	id           CategoryID
-	categoryName CategoryName
+	id   CategoryID
+	name CategoryName
 }
 
-func NewCategory(id, name string) (*Category, error) {
+func NewCategory(categoryID CategoryID, categoryName CategoryName) (*Category, error) {
 
-	cID, err := CategoryIDValidate(id)
+	err := NewCategoryID(categoryID)
 	if err != nil {
 		return nil, err
 	}
 
-	cName, err := CategoryNameValidate(name)
+	err = NewCategoryName(categoryName)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Category{
-		id:           *cID,
-		categoryName: *cName,
+		id:   categoryID,
+		name: categoryName,
 	}, nil
 
 }
