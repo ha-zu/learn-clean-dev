@@ -3,24 +3,24 @@ package tag
 import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type Tag struct {
-	id      TagID
-	tagName TagName
+	id   TagID
+	name TagName
 }
 
-func NewTag(id, tag_name string) (*Tag, error) {
+func NewTag(id TagID, name TagName) (*Tag, error) {
 
-	tID, err := TagIDValid(id)
+	err := NewTagID(id)
 	if err != nil {
 		return nil, custerr.ErrEmptyValue
 	}
 
-	tName, err := TagNameValidate(tag_name)
+	err = NewTagName(name)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Tag{
-		id:      *tID,
-		tagName: *tName,
+		id:   id,
+		name: name,
 	}, nil
 }

@@ -4,13 +4,12 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type TagID string
 
-func TagIDValid(id string) (*TagID, error) {
+func NewTagID(id TagID) error {
 
 	if id == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	tID := TagID(id)
+	return nil
 
-	return &tID, nil
 }
