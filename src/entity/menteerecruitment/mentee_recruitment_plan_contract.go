@@ -16,7 +16,8 @@ type MenteeRecruitentPlanContract struct {
 
 const MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN = 500
 
-func NewMenteeRecruitentPlanContract(id MenteeRecruitmentPlanContractID, message string, mtrpID MenteeRecruitmentPlanID, mentorID user.UserID) (*MenteeRecruitentPlanContract, error) {
+func NewMenteeRecruitentPlanContract(id MenteeRecruitmentPlanContractID, mtrpID MenteeRecruitmentPlanID,
+	mentorID user.UserID, message string) (*MenteeRecruitentPlanContract, error) {
 
 	err := NewMenteeRecruitmentPlanContractID(id)
 	if err != nil {
