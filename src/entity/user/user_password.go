@@ -1,6 +1,7 @@
 package user
 
 import (
+	"regexp"
 	"unicode/utf8"
 
 	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
@@ -10,49 +11,54 @@ type Password string
 
 const (
 	PASSWORD_MIN_LEN = 12
+	PASSWORD_REGEXP  = `^[a-zA-Z0-9]{12,}$`
 )
 
-func PasswordValidate(pw string) (*Password, error) {
+func NewPassword(pw Password) error {
 	if pw == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	if utf8.RuneCountInString(pw) < PASSWORD_MIN_LEN {
-		return nil, custerr.ErrValueIsTooShort
+	chkPW := string(pw)
+
+	if utf8.RuneCountInString(chkPW) < PASSWORD_MIN_LEN {
+		return custerr.ErrValueIsTooShort
 	}
 
-	if err := checkPasswordRune(pw); err != nil {
-		return nil, err
+	if err := checkPassword(chkPW); err != nil {
+		return err
 	}
 
-	uPW := Password(pw)
-	return &uPW, nil
+	return nil
+
 }
 
-func ChangePassword(pw Password) (*Password, error) {
+func ChangePassword(pw Password) error {
 
-	ckPW := string(pw)
+	chkPW := string(pw)
 
-	if ckPW == "" {
-		return nil, custerr.ErrEmptyValue
+	if chkPW == "" {
+		return custerr.ErrEmptyValue
 	}
 
-	if utf8.RuneCountInString(ckPW) < PASSWORD_MIN_LEN {
-		return nil, custerr.ErrValueIsTooShort
+	if utf8.RuneCountInString(chkPW) < PASSWORD_MIN_LEN {
+		return custerr.ErrValueIsTooShort
 	}
 
-	if err := checkPasswordRune(ckPW); err != nil {
-		return nil, err
+	if err := checkPassword(chkPW); err != nil {
+		return err
 	}
 
-	uPW := Password(ckPW)
-
-	return &uPW, nil
+	return nil
 }
 
-func checkPasswordRune(pw string) error {
-	// ToDo check rune
-	// for _, r := range pw {
-	// }
+func checkPassword(pw string) error {
+
+	r := regexp.MustCompile(PASSWORD_REGEXP)
+
+	if !r.MatchString(pw) {
+		return custerr.ErrNotCorrectFormat
+	}
+
 	return nil
 }

@@ -4,12 +4,12 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type UserID string
 
-func UserIDValidate(id string) (*UserID, error) {
+func NewUserID(id UserID) error {
 
 	if id == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	uID := UserID(id)
-	return &uID, nil
+	return nil
+
 }

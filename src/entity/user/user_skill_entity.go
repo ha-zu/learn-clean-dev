@@ -9,13 +9,13 @@ type Skill struct {
 	id       SkillID
 	userID   UserID
 	tagID    tag.TagID
-	evaluate int
-	year     int
+	evaluate uint64
+	year     uint64
 }
 
-func NewSkill(id string, tagID tag.TagID, userID UserID, evaluate, year int) (*Skill, error) {
+func NewSkill(id SkillID, userID UserID, tagID tag.TagID, evaluate, year uint64) (*Skill, error) {
 
-	sID, err := SkillIDValid(id)
+	err := NewSkillID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -24,12 +24,12 @@ func NewSkill(id string, tagID tag.TagID, userID UserID, evaluate, year int) (*S
 		return nil, custerr.ErrOutOfRange
 	}
 
-	if year < 0 || year > 5 {
+	if year > 5 {
 		return nil, custerr.ErrOutOfRange
 	}
 
 	return &Skill{
-		id:       *sID,
+		id:       id,
 		userID:   userID,
 		tagID:    tagID,
 		evaluate: evaluate,
@@ -37,7 +37,7 @@ func NewSkill(id string, tagID tag.TagID, userID UserID, evaluate, year int) (*S
 	}, nil
 }
 
-func (s *Skill) ChangeEvaluate(evaluate int) error {
+func (s *Skill) ChangeEvaluate(evaluate uint64) error {
 
 	if evaluate < 1 || evaluate > 5 {
 		return custerr.ErrOutOfRange
@@ -48,9 +48,9 @@ func (s *Skill) ChangeEvaluate(evaluate int) error {
 	return nil
 }
 
-func (s *Skill) ChangeYear(year int) error {
+func (s *Skill) ChangeYear(year uint64) error {
 
-	if year < 0 || year > 5 {
+	if year > 5 {
 		return custerr.ErrOutOfRange
 	}
 

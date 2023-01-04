@@ -14,21 +14,43 @@ const (
 	EMAIL_REGEXP  = `^([a-z0-9]+[a-z0-9.+-_][a-z0-9])+@([a-z0-9]+[a-z0-9.+-_]*\.)[a-z]{2,}$`
 )
 
-func EmailValidate(email string) (*Email, error) {
+func NewEmail(email Email) error {
 
 	if email == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	if l := utf8.RuneCountInString(email); l > EMAIL_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
+	chkEmail := string(email)
+
+	if l := utf8.RuneCountInString(chkEmail); l > EMAIL_MAX_LEN {
+		return custerr.ErrValueIsTooLong
 	}
 
 	r := regexp.MustCompile(EMAIL_REGEXP)
-	if !r.MatchString(email) {
-		return nil, custerr.ErrNotCorrectFormat
+	if !r.MatchString(chkEmail) {
+		return custerr.ErrNotCorrectFormat
 	}
 
-	uEmail := Email(email)
-	return &uEmail, nil
+	return nil
+}
+
+func ChangeEmail(email Email) error {
+
+	if email == "" {
+		return custerr.ErrEmptyValue
+	}
+
+	chkEmail := string(email)
+
+	if l := utf8.RuneCountInString(chkEmail); l > EMAIL_MAX_LEN {
+		return custerr.ErrValueIsTooLong
+	}
+
+	r := regexp.MustCompile(EMAIL_REGEXP)
+	if !r.MatchString(chkEmail) {
+		return custerr.ErrNotCorrectFormat
+	}
+
+	return nil
+
 }

@@ -4,13 +4,11 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type ResumeID string
 
-func ResumeIDValid(id string) (*ResumeID, error) {
+func NewResumeID(id ResumeID) error {
 
 	if id == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	rID := ResumeID(id)
-
-	return &rID, nil
+	return nil
 }

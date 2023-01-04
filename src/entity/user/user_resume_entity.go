@@ -1,7 +1,6 @@
 package user
 
 import (
-	"time"
 	"unicode/utf8"
 
 	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
@@ -11,8 +10,8 @@ type Resume struct {
 	id          ResumeID
 	userID      UserID
 	description string
-	from        int
-	to          int
+	from        uint64
+	to          uint64
 }
 
 const (
@@ -20,9 +19,9 @@ const (
 	RESUME_BASE_YEAR           = 1970
 )
 
-func NewResume(id, description string, userID UserID, from, to int) (*Resume, error) {
+func NewResume(id ResumeID, userID UserID, description string, from, to uint64) (*Resume, error) {
 
-	rID, err := ResumeIDValid(id)
+	err := NewResumeID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +39,7 @@ func NewResume(id, description string, userID UserID, from, to int) (*Resume, er
 	}
 
 	return &Resume{
-		id:          *rID,
+		id:          id,
 		userID:      userID,
 		description: description,
 		from:        from,
@@ -48,7 +47,7 @@ func NewResume(id, description string, userID UserID, from, to int) (*Resume, er
 	}, nil
 }
 
-func (r *Resume) ChangeDesctiption(desc string, ud time.Time) error {
+func (r *Resume) ChangeDesctiption(desc string) error {
 
 	if utf8.RuneCountInString(desc) > RESUME_DESCRIPTION_MAX_LEN {
 		return custerr.ErrValueIsTooLong
@@ -59,7 +58,7 @@ func (r *Resume) ChangeDesctiption(desc string, ud time.Time) error {
 	return nil
 }
 
-func (r *Resume) ChangeFrom(from int, ud time.Time) error {
+func (r *Resume) ChangeFrom(from uint64) error {
 
 	if from < RESUME_BASE_YEAR {
 		return custerr.ErrOutOfRange
@@ -70,7 +69,7 @@ func (r *Resume) ChangeFrom(from int, ud time.Time) error {
 	return nil
 }
 
-func (r *Resume) ChangeTo(to int, ud time.Time) error {
+func (r *Resume) ChangeTo(to uint64) error {
 
 	if to < RESUME_BASE_YEAR || r.from < to {
 		return custerr.ErrOutOfRange
