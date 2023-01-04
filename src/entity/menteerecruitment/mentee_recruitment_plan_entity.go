@@ -4,40 +4,44 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/ha-zu/learn-clean-dev/src/entity"
 	ctg "github.com/ha-zu/learn-clean-dev/src/entity/category"
 	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+	cs "github.com/ha-zu/learn-clean-dev/src/entity/planconsulttype"
+	ct "github.com/ha-zu/learn-clean-dev/src/entity/plancontracttype"
+	st "github.com/ha-zu/learn-clean-dev/src/entity/planstatus"
 	"github.com/ha-zu/learn-clean-dev/src/entity/user"
 )
 
 type MenteeRecruitmentPlan struct {
-	id             MenteeRecruitmentPlanID
-	userID         user.UserID
-	title          string
-	categoryID     ctg.CategoryID
-	contractType   string
-	consultType    string
-	description    string
-	price_from     int
-	price_to       int
-	term_from      time.Time
-	term_to        time.Time
-	status         string
-	menteeContract []MenteeRecruitentPlanContract
-	menteeProposal []MenteeRecruitentPlanProposal
+	id                 MenteeRecruitmentPlanID
+	userID             user.UserID
+	title              string
+	categoryID         ctg.CategoryID
+	contractType       ct.ContractType
+	consultType        cs.ConsultType
+	status             st.PlanStatus
+	description        string
+	priceFrom          uint64
+	priceTo            uint64
+	termFrom           time.Time
+	termTo             time.Time
+	menteeContractList []MenteeRecruitentPlanContract
+	menteeProposalList []MenteeRecruitentPlanProposal
 }
 
 const (
 	MENTEE_PLAN_DESCRIPTION_MAX_LEN = 2000
 	MENTEE_PLAN_TITLE_MAX_LEN       = 255
 	MENTEE_PLAN_MAX_DATE            = 14
+	MENTEE_PLAN_BASE_PRICE          = 1000
 )
 
-func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat string,
-	price_from, price_to int, term_from, term_to time.Time,
-	usrID user.UserID, ctgID ctg.CategoryID, contract []MenteeRecruitentPlanContract, proposal []MenteeRecruitentPlanProposal) (*MenteeRecruitmentPlan, error) {
+func NewMenteeRecruitmentPlan(id MenteeRecruitmentPlanID, usrID user.UserID, title string, ctgID ctg.CategoryID,
+	contractType ct.ContractType, consultType cs.ConsultType, stat st.PlanStatus,
+	desc string, priceFrom, priceTo uint64, termFrom, termTo time.Time,
+	contractList []MenteeRecruitentPlanContract, proposalList []MenteeRecruitentPlanProposal) (*MenteeRecruitmentPlan, error) {
 
-	mrpID, err := MenteePlanIDValidate(id)
+	err := NewMenteePlanID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -50,24 +54,19 @@ func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat s
 		return nil, custerr.ErrValueIsTooLong
 	}
 
-	if ctgID == "" {
-		return nil, custerr.ErrEmptyValue
+	err = ct.NewPlanContractType(contractType)
+	if err != nil {
+		return nil, err
 	}
 
-	if contractType == "" {
-		return nil, custerr.ErrEmptyValue
+	err = cs.NewPlanConsultType(consultType)
+	if err != nil {
+		return nil, err
 	}
 
-	if contractType != entity.PLAN_CONTRACT_ONECE && contractType != entity.PLAN_CONTRACT_CONTINUTION {
-		return nil, custerr.ErrNotMatchValue
-	}
-
-	if consultType == "" {
-		return nil, custerr.ErrEmptyValue
-	}
-
-	if consultType != entity.PLAN_CONSULT_TEL && consultType != entity.PLAN_CONSULT_CHAT {
-		return nil, custerr.ErrNotMatchValue
+	err = st.NewPlanStatus(stat)
+	if err != nil {
+		return nil, err
 	}
 
 	if desc == "" {
@@ -78,47 +77,44 @@ func NewMenteeRecruitmentPlan(id, title, contractType, consultType, desc, stat s
 		return nil, custerr.ErrValueIsTooLong
 	}
 
-	if price_from < entity.PLAN_PRICE_BASE {
+	if priceFrom < MENTEE_PLAN_BASE_PRICE {
 		return nil, custerr.ErrOutOfRange
 	}
 
-	if price_from > price_to {
+	if priceFrom > priceTo {
 		return nil, custerr.ErrOutOfRange
 	}
 
-	if term_from.IsZero() {
+	if termFrom.IsZero() {
 		return nil, custerr.ErrNotMatchValue
 	}
 
-	if term_to.IsZero() {
+	if termTo.IsZero() {
 		return nil, custerr.ErrNotMatchValue
 	}
 
-	diff_days := term_to.Sub(term_from).Hours() / 24
+	diff_days := termTo.Sub(termFrom).Hours() / 24
 	if diff_days > MENTEE_PLAN_MAX_DATE {
 		return nil, custerr.ErrOutOfRange
 	}
 
-	if stat == "" {
-		return nil, custerr.ErrEmptyValue
-	}
-
 	return &MenteeRecruitmentPlan{
-		id:             *mrpID,
-		userID:         usrID,
-		title:          title,
-		categoryID:     ctgID,
-		contractType:   contractType,
-		consultType:    consultType,
-		description:    desc,
-		price_from:     price_from,
-		price_to:       price_to,
-		term_from:      term_from,
-		term_to:        term_to,
-		status:         stat,
-		menteeContract: contract,
-		menteeProposal: proposal,
+		id:                 id,
+		userID:             usrID,
+		title:              title,
+		categoryID:         ctgID,
+		contractType:       contractType,
+		consultType:        consultType,
+		description:        desc,
+		priceFrom:          priceFrom,
+		priceTo:            priceTo,
+		termFrom:           termFrom,
+		termTo:             termTo,
+		status:             stat,
+		menteeContractList: contractList,
+		menteeProposalList: proposalList,
 	}, nil
+
 }
 
 func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanTitle(title string) error {
@@ -132,6 +128,7 @@ func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanTitle(title string) e
 	}
 
 	return nil
+
 }
 
 func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanDescription(desc string) error {
@@ -147,4 +144,5 @@ func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanDescription(desc stri
 	m.description = desc
 
 	return nil
+
 }
