@@ -6,6 +6,9 @@ import (
 	"github.com/ha-zu/learn-clean-dev/src/entity"
 	ctg "github.com/ha-zu/learn-clean-dev/src/entity/category"
 	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+	cs "github.com/ha-zu/learn-clean-dev/src/entity/planconsulttype"
+	ct "github.com/ha-zu/learn-clean-dev/src/entity/plancontracttype"
+	st "github.com/ha-zu/learn-clean-dev/src/entity/planstatus"
 	"github.com/ha-zu/learn-clean-dev/src/entity/tag"
 	"github.com/ha-zu/learn-clean-dev/src/entity/user"
 )
@@ -14,13 +17,13 @@ type MentorPlan struct {
 	id           MentorPlanID
 	userID       user.UserID
 	title        string
+	description  string
 	categoryID   ctg.CategoryID
 	tag          []tag.Tag
-	description  string
-	status       string
-	price        int
-	contractType string
-	consultType  string
+	contractType ct.ContractType
+	consultType  cs.ConsultType
+	status       st.PlanStatus
+	price        uint64
 	proposal     []MentorProposal
 	contract     []MentorContract
 }
@@ -28,12 +31,14 @@ type MentorPlan struct {
 const (
 	MENTOR_PLAN_TITLE       = 255
 	MENTOR_PLAN_DESCRIPTION = 2000
+	MENTOR_PLAN_BASE_PRICE  = 1000
 )
 
-func NewMentorPlan(id, title, desc, stat, contractType, consultType string, price int,
-	uID user.UserID, cID ctg.CategoryID, tag []tag.Tag, proposal []MentorProposal, contract []MentorContract) (*MentorPlan, error) {
+func NewMentorPlan(id MentorPlanID, uID user.UserID, title, desc string, cID ctg.CategoryID, tag []tag.Tag,
+	stat st.PlanStatus, contractType ct.ContractType, consultType cs.ConsultType, price uint64,
+	proposal []MentorProposal, contract []MentorContract) (*MentorPlan, error) {
 
-	mID, err := MentorPlanIDValidate(id)
+	err := NewMentorPlanID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -50,41 +55,36 @@ func NewMentorPlan(id, title, desc, stat, contractType, consultType string, pric
 		return nil, custerr.ErrValueIsTooLong
 	}
 
-	if stat == "" {
-		return nil, custerr.ErrEmptyValue
+	err = ct.NewPlanContractType(contractType)
+	if err != nil {
+		return nil, err
 	}
 
-	if stat == entity.PLAN_DEFAULT_STAT {
-		return nil, custerr.ErrNotDefaultValue
+	err = cs.NewPlanConsultType(consultType)
+	if err != nil {
+		return nil, err
 	}
 
-	if contractType == "" {
-		return nil, custerr.ErrEmptyValue
+	err = st.NewPlanStatus(stat)
+	if err != nil {
+		return nil, err
 	}
 
-	if contractType != entity.PLAN_CONTRACT_ONECE && contractType != entity.PLAN_CONTRACT_CONTINUTION {
-		return nil, custerr.ErrNotMatchValue
-	}
-
-	if consultType == "" {
-		return nil, custerr.ErrEmptyValue
-	}
-
-	if consultType != entity.PLAN_CONTRACT_ONECE && consultType != entity.PLAN_CONTRACT_CONTINUTION {
-		return nil, custerr.ErrNotMatchValue
+	if price < MENTOR_PLAN_BASE_PRICE {
+		return nil, custerr.ErrOutOfRange
 	}
 
 	return &MentorPlan{
-		id:           *mID,
+		id:           id,
 		userID:       uID,
 		title:        title,
+		description:  desc,
 		categoryID:   cID,
 		tag:          tag,
-		description:  desc,
-		status:       stat,
-		price:        price,
 		contractType: contractType,
 		consultType:  consultType,
+		status:       stat,
+		price:        price,
 		proposal:     proposal,
 		contract:     contract,
 	}, nil
@@ -104,6 +104,7 @@ func (m *MentorPlan) ChangeMentorPlanTitle(title string) error {
 	m.title = title
 
 	return nil
+
 }
 
 func (m *MentorPlan) ChangeMentorPlanDescription(desc string) error {
@@ -115,67 +116,16 @@ func (m *MentorPlan) ChangeMentorPlanDescription(desc string) error {
 	m.description = desc
 
 	return nil
-}
-
-func (m *MentorPlan) ChangeMentorPlanStatus(stat string) error {
-
-	if stat == "" {
-		return custerr.ErrEmptyValue
-	}
-
-	if stat == entity.PLAN_DEFAULT_STAT || stat == entity.PLAN_STOP_STAT {
-		return custerr.ErrNotCorrectFormat
-	}
-
-	if stat == entity.PLAN_DEFAULT_STAT {
-		m.status = entity.PLAN_STOP_STAT
-		return nil
-	}
-
-	m.status = entity.PLAN_DEFAULT_STAT
-
-	return nil
 
 }
 
-func (m *MentorPlan) ChangeMentorPlanPrice(price int) error {
+func (m *MentorPlan) ChangeMentorPlanPrice(price uint64) error {
 
 	if price < entity.PLAN_PRICE_BASE {
 		return custerr.ErrNotEnoughValue
 	}
 
 	m.price = price
-
-	return nil
-}
-
-func (m *MentorPlan) ChangeMentorPlanContractType(contractType string) error {
-
-	if contractType == "" {
-		return custerr.ErrEmptyValue
-	}
-
-	if contractType != entity.PLAN_CONTRACT_ONECE && contractType != entity.PLAN_CONTRACT_CONTINUTION {
-		return custerr.ErrNotMatchValue
-	}
-
-	m.contractType = contractType
-
-	return nil
-
-}
-
-func (m *MentorPlan) ChangeMentorPlanConsultType(consultType string) error {
-
-	if consultType == "" {
-		return custerr.ErrEmptyValue
-	}
-
-	if consultType != entity.PLAN_CONTRACT_ONECE && consultType != entity.PLAN_CONTRACT_CONTINUTION {
-		return custerr.ErrNotMatchValue
-	}
-
-	m.consultType = consultType
 
 	return nil
 

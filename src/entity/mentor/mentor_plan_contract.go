@@ -16,9 +16,9 @@ type MentorContract struct {
 
 const MENTOR_CONTRACT_MESSAGE_MAX_LEN = 500
 
-func NewMentorContract(id, message string, mentorPlanID MentorPlanID, menteeID user.UserID) (*MentorContract, error) {
+func NewMentorContract(id MentorContractID, mentorPlanID MentorPlanID, menteeID user.UserID, message string) (*MentorContract, error) {
 
-	mcID, err := MentorContractIDValidate(id)
+	err := NewMentorContractID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -28,11 +28,12 @@ func NewMentorContract(id, message string, mentorPlanID MentorPlanID, menteeID u
 	}
 
 	return &MentorContract{
-		id:           *mcID,
+		id:           id,
 		mentorPlanID: mentorPlanID,
 		menteeID:     menteeID,
 		message:      message,
 	}, nil
+
 }
 
 func (m *MentorContract) ChangeMentorPlanContractMessage(message string) error {
@@ -44,4 +45,5 @@ func (m *MentorContract) ChangeMentorPlanContractMessage(message string) error {
 	m.message = message
 
 	return nil
+
 }

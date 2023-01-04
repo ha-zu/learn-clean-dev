@@ -16,9 +16,9 @@ type MentorProposal struct {
 
 const MENTOR_PLAN_PROPOSAL_MAX_LEN = 2000
 
-func NewMentorProposal(id, proposal string, mentorPlanID MentorPlanID, menteeID user.UserID) (*MentorProposal, error) {
+func NewMentorProposal(id MentorProposalID, mentorPlanID MentorPlanID, menteeID user.UserID, proposal string) (*MentorProposal, error) {
 
-	mpID, err := MentorProposalIDValidate(id)
+	err := NewMentorProposalID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -32,11 +32,12 @@ func NewMentorProposal(id, proposal string, mentorPlanID MentorPlanID, menteeID 
 	}
 
 	return &MentorProposal{
-		id:           *mpID,
+		id:           id,
 		mentorPlanID: mentorPlanID,
 		menteeID:     menteeID,
 		proposal:     proposal,
 	}, nil
+
 }
 
 func (mp *MentorProposal) ChangeMentorProposal(proposal string) error {
@@ -52,4 +53,5 @@ func (mp *MentorProposal) ChangeMentorProposal(proposal string) error {
 	mp.proposal = proposal
 
 	return nil
+
 }
