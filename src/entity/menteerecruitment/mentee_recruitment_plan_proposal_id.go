@@ -4,13 +4,11 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type MenteeRecruitmentPlanProposalID string
 
-func MenteeRecruitmentPlanProposalIDValidate(id string) (*MenteeRecruitmentPlanProposalID, error) {
+func NewMenteeRecruitmentPlanProposalID(id MenteeRecruitmentPlanProposalID) error {
 
 	if id == "" {
-		return nil, custerr.ErrEmptyValue
+		return custerr.ErrEmptyValue
 	}
 
-	mrpID := MenteeRecruitmentPlanProposalID(id)
-
-	return &mrpID, nil
+	return nil
 }

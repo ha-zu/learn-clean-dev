@@ -16,9 +16,10 @@ type MenteeRecruitentPlanProposal struct {
 
 const MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN = 2000
 
-func NewMenteeRecruitentPlanProposal(id, proposal string, mrpID MenteeRecruitmentPlanID, mentorID user.UserID) (*MenteeRecruitentPlanProposal, error) {
+func NewMenteeRecruitentPlanProposal(id MenteeRecruitmentPlanProposalID, mrpID MenteeRecruitmentPlanID,
+	mentorID user.UserID, proposal string) (*MenteeRecruitentPlanProposal, error) {
 
-	mrppID, err := MenteeRecruitmentPlanProposalIDValidate(id)
+	err := NewMenteeRecruitmentPlanProposalID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +33,7 @@ func NewMenteeRecruitentPlanProposal(id, proposal string, mrpID MenteeRecruitmen
 	}
 
 	return &MenteeRecruitentPlanProposal{
-		id:       *mrppID,
+		id:       id,
 		mrpID:    mrpID,
 		mentorID: mentorID,
 		proposal: proposal,
