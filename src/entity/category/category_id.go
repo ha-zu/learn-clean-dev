@@ -1,14 +1,24 @@
 package category
 
-import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+import (
+	"github.com/google/uuid"
+	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+)
 
 type CategoryID string
 
-func NewCategoryID(id CategoryID) error {
+func NewCategoryID() CategoryID {
+
+	return CategoryID(uuid.New().String())
+
+}
+
+func NewCategoryIDByStr(id string) (CategoryID, error) {
 
 	if id == "" {
-		return custerr.ErrEmptyValue
+		return CategoryID(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return CategoryID(id), nil
+
 }
