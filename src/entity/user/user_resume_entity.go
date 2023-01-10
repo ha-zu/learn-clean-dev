@@ -19,35 +19,28 @@ const (
 	RESUME_BASE_YEAR           = 1970
 )
 
-func NewResume(id ResumeID, userID UserID, description string, from, to uint64) (*Resume, error) {
+func NewResume(id ResumeID, userID UserID, desc string, from, to uint64) (*Resume, error) {
 
-	err := NewResumeID(id)
+	r := &Resume{
+		id:     id,
+		userID: userID,
+	}
+
+	err := r.ValidateDesctiption(desc)
 	if err != nil {
 		return nil, err
 	}
 
-	if utf8.RuneCountInString(description) > RESUME_DESCRIPTION_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
+	err = r.ValidateFromTo(from, to)
+	if err != nil {
+		return nil, err
 	}
 
-	if from < RESUME_BASE_YEAR {
-		return nil, custerr.ErrOutOfRange
-	}
+	return r, nil
 
-	if to < RESUME_BASE_YEAR || from < to {
-		return nil, custerr.ErrOutOfRange
-	}
-
-	return &Resume{
-		id:          id,
-		userID:      userID,
-		description: description,
-		from:        from,
-		to:          to,
-	}, nil
 }
 
-func (r *Resume) ChangeDesctiption(desc string) error {
+func (r *Resume) ValidateDesctiption(desc string) error {
 
 	if utf8.RuneCountInString(desc) > RESUME_DESCRIPTION_MAX_LEN {
 		return custerr.ErrValueIsTooLong
@@ -56,26 +49,22 @@ func (r *Resume) ChangeDesctiption(desc string) error {
 	r.description = desc
 
 	return nil
+
 }
 
-func (r *Resume) ChangeFrom(from uint64) error {
+func (r *Resume) ValidateFromTo(from, to uint64) error {
 
 	if from < RESUME_BASE_YEAR {
 		return custerr.ErrOutOfRange
 	}
 
-	r.from = from
-
-	return nil
-}
-
-func (r *Resume) ChangeTo(to uint64) error {
-
 	if to < RESUME_BASE_YEAR || r.from < to {
 		return custerr.ErrOutOfRange
 	}
 
+	r.from = from
 	r.to = to
 
 	return nil
+
 }

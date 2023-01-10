@@ -10,33 +10,20 @@ type UserName string
 
 const USER_NAME_MAX_LEN = 255
 
-func NewUserName(name UserName) error {
-
-	chkName := string(name)
-
-	if chkName == "" {
-		return custerr.ErrEmptyValue
-	}
-
-	if l := utf8.RuneCountInString(chkName); l > USER_NAME_MAX_LEN {
-		return custerr.ErrValueIsTooLong
-	}
-
-	return nil
+func NewUserName(name string) (UserName, error) {
+	return ValidateUserName(name)
 }
 
-func ChangeName(name UserName) error {
+func ValidateUserName(name string) (UserName, error) {
 
 	if name == "" {
-		return custerr.ErrEmptyValue
+		return UserName(""), custerr.ErrEmptyValue
 	}
 
-	chkName := string(name)
-
-	if l := utf8.RuneCountInString(chkName); l > USER_NAME_MAX_LEN {
-		return custerr.ErrValueIsTooLong
+	if l := utf8.RuneCountInString(name); l > USER_NAME_MAX_LEN {
+		return UserName(name), custerr.ErrValueIsTooLong
 	}
 
-	return nil
+	return UserName(name), nil
 
 }

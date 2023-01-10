@@ -1,14 +1,22 @@
 package user
 
-import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+import (
+	"github.com/google/uuid"
+	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+)
 
 type ResumeID string
 
-func NewResumeID(id ResumeID) error {
+func NewResumeID() ResumeID {
+	return ResumeID(uuid.New().String())
+}
+
+func NewResumeIDStr(id ResumeID) (ResumeID, error) {
 
 	if id == "" {
-		return custerr.ErrEmptyValue
+		return ResumeID(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return ResumeID(id), nil
+
 }

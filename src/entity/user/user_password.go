@@ -14,51 +14,25 @@ const (
 	PASSWORD_REGEXP  = `^[a-zA-Z0-9]{12,}$`
 )
 
-func NewPassword(pw Password) error {
+func NewPassword(pw string) (Password, error) {
+	return ValidatePassword(pw)
+}
+
+func ValidatePassword(pw string) (Password, error) {
+
 	if pw == "" {
-		return custerr.ErrEmptyValue
+		return Password(""), custerr.ErrEmptyValue
 	}
 
-	chkPW := string(pw)
-
-	if utf8.RuneCountInString(chkPW) < PASSWORD_MIN_LEN {
-		return custerr.ErrValueIsTooShort
+	if utf8.RuneCountInString(pw) < PASSWORD_MIN_LEN {
+		return Password(pw), custerr.ErrValueIsTooShort
 	}
-
-	if err := checkPassword(chkPW); err != nil {
-		return err
-	}
-
-	return nil
-
-}
-
-func ChangePassword(pw Password) error {
-
-	chkPW := string(pw)
-
-	if chkPW == "" {
-		return custerr.ErrEmptyValue
-	}
-
-	if utf8.RuneCountInString(chkPW) < PASSWORD_MIN_LEN {
-		return custerr.ErrValueIsTooShort
-	}
-
-	if err := checkPassword(chkPW); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func checkPassword(pw string) error {
 
 	r := regexp.MustCompile(PASSWORD_REGEXP)
-
 	if !r.MatchString(pw) {
-		return custerr.ErrNotCorrectFormat
+		return Password(pw), custerr.ErrNotCorrectFormat
 	}
 
-	return nil
+	return Password(pw), nil
+
 }

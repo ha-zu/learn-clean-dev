@@ -15,29 +15,26 @@ type Skill struct {
 
 func NewSkill(id SkillID, userID UserID, tagID tag.TagID, evaluate, year uint64) (*Skill, error) {
 
-	err := NewSkillID(id)
+	s := &Skill{
+		id:     id,
+		userID: userID,
+		tagID:  tagID,
+	}
+
+	err := s.ValidateEvaluate(evaluate)
 	if err != nil {
 		return nil, err
 	}
 
-	if evaluate < 1 || evaluate > 5 {
-		return nil, custerr.ErrOutOfRange
+	err = s.ValidateYear(year)
+	if err != nil {
+		return nil, err
 	}
 
-	if year > 5 {
-		return nil, custerr.ErrOutOfRange
-	}
-
-	return &Skill{
-		id:       id,
-		userID:   userID,
-		tagID:    tagID,
-		evaluate: evaluate,
-		year:     year,
-	}, nil
+	return s, nil
 }
 
-func (s *Skill) ChangeEvaluate(evaluate uint64) error {
+func (s *Skill) ValidateEvaluate(evaluate uint64) error {
 
 	if evaluate < 1 || evaluate > 5 {
 		return custerr.ErrOutOfRange
@@ -48,7 +45,7 @@ func (s *Skill) ChangeEvaluate(evaluate uint64) error {
 	return nil
 }
 
-func (s *Skill) ChangeYear(year uint64) error {
+func (s *Skill) ValidateYear(year uint64) error {
 
 	if year > 5 {
 		return custerr.ErrOutOfRange
