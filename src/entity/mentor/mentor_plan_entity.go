@@ -32,8 +32,7 @@ const (
 )
 
 func NewMentorPlan(id MentorPlanID, uID user.UserID, title, desc string, cID ctg.CategoryID, tag []tag.Tag,
-	stat st.PlanStatus, contractType ct.ContractType, consultType cs.ConsultType, price uint64,
-	proposal []MentorProposal, contract []MentorContract) (*MentorPlan, error) {
+	stat st.PlanStatus, contractType ct.ContractType, consultType cs.ConsultType, price uint64) (*MentorPlan, error) {
 
 	mp := &MentorPlan{
 		id:           id,
