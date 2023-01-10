@@ -41,83 +41,42 @@ func NewMenteeRecruitmentPlan(id MenteeRecruitmentPlanID, usrID user.UserID, tit
 	desc string, priceFrom, priceTo uint64, termFrom, termTo time.Time,
 	contractList []MenteeRecruitentPlanContract, proposalList []MenteeRecruitentPlanProposal) (*MenteeRecruitmentPlan, error) {
 
-	err := NewMenteePlanID(id)
-	if err != nil {
-		return nil, err
-	}
-
-	if title == "" {
-		return nil, custerr.ErrEmptyValue
-	}
-
-	if l := utf8.RuneCountInString(title); l > MENTEE_PLAN_TITLE_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
-	}
-
-	err = ct.NewPlanContractType(contractType)
-	if err != nil {
-		return nil, err
-	}
-
-	err = cs.NewPlanConsultType(consultType)
-	if err != nil {
-		return nil, err
-	}
-
-	err = st.NewPlanStatus(stat)
-	if err != nil {
-		return nil, err
-	}
-
-	if desc == "" {
-		return nil, custerr.ErrEmptyValue
-	}
-
-	if l := utf8.RuneCountInString(desc); l > MENTEE_PLAN_DESCRIPTION_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
-	}
-
-	if priceFrom < MENTEE_PLAN_BASE_PRICE {
-		return nil, custerr.ErrOutOfRange
-	}
-
-	if priceFrom > priceTo {
-		return nil, custerr.ErrOutOfRange
-	}
-
-	if termFrom.IsZero() {
-		return nil, custerr.ErrNotMatchValue
-	}
-
-	if termTo.IsZero() {
-		return nil, custerr.ErrNotMatchValue
-	}
-
-	diff_days := termTo.Sub(termFrom).Hours() / 24
-	if diff_days > MENTEE_PLAN_MAX_DATE {
-		return nil, custerr.ErrOutOfRange
-	}
-
-	return &MenteeRecruitmentPlan{
+	plan := &MenteeRecruitmentPlan{
 		id:                 id,
 		userID:             usrID,
-		title:              title,
 		categoryID:         ctgID,
 		contractType:       contractType,
 		consultType:        consultType,
-		description:        desc,
-		priceFrom:          priceFrom,
-		priceTo:            priceTo,
-		termFrom:           termFrom,
-		termTo:             termTo,
 		status:             stat,
 		menteeContractList: contractList,
 		menteeProposalList: proposalList,
-	}, nil
+	}
+
+	err := plan.ValidatesMenteeRecruitmentPlanTitle(title)
+	if err != nil {
+		return nil, err
+	}
+
+	err = plan.ValidateMenteeRecruitmentPlanDescription(desc)
+	if err != nil {
+		return nil, err
+	}
+
+	err = plan.ValidateMenteeRecruitmentPlanPrice(priceFrom, priceTo)
+	if err != nil {
+		return nil, err
+	}
+
+	err = plan.ValidateMenteeRecruitmentPlanTerm(termFrom, termTo)
+	if err != nil {
+		return nil, err
+	}
+
+	return plan, nil
 
 }
 
-func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanTitle(title string) error {
+func (m *MenteeRecruitmentPlan) ValidatesMenteeRecruitmentPlanTitle(title string) error {
 
 	if title == "" {
 		return custerr.ErrEmptyValue
@@ -127,11 +86,13 @@ func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanTitle(title string) e
 		return custerr.ErrValueIsTooLong
 	}
 
+	m.title = title
+
 	return nil
 
 }
 
-func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanDescription(desc string) error {
+func (m *MenteeRecruitmentPlan) ValidateMenteeRecruitmentPlanDescription(desc string) error {
 
 	if desc == "" {
 		return custerr.ErrEmptyValue
@@ -142,6 +103,45 @@ func (m *MenteeRecruitmentPlan) ChangeMenteeRecruitmentPlanDescription(desc stri
 	}
 
 	m.description = desc
+
+	return nil
+
+}
+
+func (m *MenteeRecruitmentPlan) ValidateMenteeRecruitmentPlanPrice(priceFrom, priceTo uint64) error {
+
+	if priceFrom < MENTEE_PLAN_BASE_PRICE {
+		return custerr.ErrOutOfRange
+	}
+
+	if priceFrom > priceTo {
+		return custerr.ErrOutOfRange
+	}
+
+	m.priceFrom = priceFrom
+	m.priceTo = priceTo
+
+	return nil
+
+}
+
+func (m *MenteeRecruitmentPlan) ValidateMenteeRecruitmentPlanTerm(termFrom, termTo time.Time) error {
+
+	if termFrom.IsZero() {
+		return custerr.ErrNotMatchValue
+	}
+
+	if termTo.IsZero() {
+		return custerr.ErrNotMatchValue
+	}
+
+	diff_days := termTo.Sub(termFrom).Hours() / 24
+	if diff_days > MENTEE_PLAN_MAX_DATE {
+		return custerr.ErrOutOfRange
+	}
+
+	m.termFrom = termFrom
+	m.termTo = termTo
 
 	return nil
 

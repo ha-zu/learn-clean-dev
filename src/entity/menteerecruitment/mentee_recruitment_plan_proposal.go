@@ -19,28 +19,22 @@ const MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN = 2000
 func NewMenteeRecruitentPlanProposal(id MenteeRecruitmentPlanProposalID, mrpID MenteeRecruitmentPlanID,
 	mentorID user.UserID, proposal string) (*MenteeRecruitentPlanProposal, error) {
 
-	err := NewMenteeRecruitmentPlanProposalID(id)
+	pp := &MenteeRecruitentPlanProposal{
+		id:       id,
+		mrpID:    mrpID,
+		mentorID: mentorID,
+	}
+
+	err := pp.ValidateMenteeRecruitentPlanProposal(proposal)
 	if err != nil {
 		return nil, err
 	}
 
-	if proposal == "" {
-		return nil, custerr.ErrEmptyValue
-	}
+	return pp, nil
 
-	if l := utf8.RuneCountInString(proposal); l > MENTEE_PLAN_RECRUITMENT_PROPOSAL_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
-	}
-
-	return &MenteeRecruitentPlanProposal{
-		id:       id,
-		mrpID:    mrpID,
-		mentorID: mentorID,
-		proposal: proposal,
-	}, nil
 }
 
-func (m *MenteeRecruitentPlanProposal) ChangeMenteeRecruitentPlanProposal(proposal string) error {
+func (m *MenteeRecruitentPlanProposal) ValidateMenteeRecruitentPlanProposal(proposal string) error {
 
 	if proposal == "" {
 		return custerr.ErrEmptyValue

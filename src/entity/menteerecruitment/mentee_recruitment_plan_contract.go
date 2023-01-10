@@ -19,24 +19,22 @@ const MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN = 500
 func NewMenteeRecruitentPlanContract(id MenteeRecruitmentPlanContractID, mtrpID MenteeRecruitmentPlanID,
 	mentorID user.UserID, message string) (*MenteeRecruitentPlanContract, error) {
 
-	err := NewMenteeRecruitmentPlanContractID(id)
+	pc := &MenteeRecruitentPlanContract{
+		id:                     id,
+		menteeRecruitentPlanID: mtrpID,
+		mentorID:               mentorID,
+	}
+
+	err := pc.ValidateMenteeRecruitentPlanContractMessage(message)
 	if err != nil {
 		return nil, err
 	}
 
-	if l := utf8.RuneCountInString(message); l > MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN {
-		return nil, custerr.ErrValueIsTooLong
-	}
+	return pc, nil
 
-	return &MenteeRecruitentPlanContract{
-		id:                     id,
-		menteeRecruitentPlanID: mtrpID,
-		mentorID:               mentorID,
-		message:                message,
-	}, nil
 }
 
-func (m *MenteeRecruitentPlanContract) ChangeMenteeRecruitentPlanContractMessage(message string) error {
+func (m *MenteeRecruitentPlanContract) ValidateMenteeRecruitentPlanContractMessage(message string) error {
 
 	if l := utf8.RuneCountInString(message); l > MENTEE_PLAN_CONTRACT_MESSAGE_MAX_LEN {
 		return custerr.ErrValueIsTooLong
@@ -45,4 +43,5 @@ func (m *MenteeRecruitentPlanContract) ChangeMenteeRecruitentPlanContractMessage
 	m.message = message
 
 	return nil
+
 }

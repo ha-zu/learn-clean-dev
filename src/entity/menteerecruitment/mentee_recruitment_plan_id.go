@@ -1,14 +1,22 @@
 package menteerecruitment
 
-import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+import (
+	"github.com/google/uuid"
+	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+)
 
 type MenteeRecruitmentPlanID string
 
-func NewMenteePlanID(id MenteeRecruitmentPlanID) error {
+func NewMenteePlanID() MenteeRecruitmentPlanID {
+	return MenteeRecruitmentPlanID(uuid.New().String())
+}
+
+func NewMenteePlanIDStr(id string) (MenteeRecruitmentPlanID, error) {
 
 	if id == "" {
-		return custerr.ErrEmptyValue
+		return MenteeRecruitmentPlanID(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return MenteeRecruitmentPlanID(id), nil
+
 }
