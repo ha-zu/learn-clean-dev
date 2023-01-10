@@ -23,8 +23,6 @@ type MentorPlan struct {
 	consultType  cs.ConsultType
 	status       st.PlanStatus
 	price        uint64
-	proposal     []MentorProposal
-	contract     []MentorContract
 }
 
 const (
@@ -45,8 +43,6 @@ func NewMentorPlan(id MentorPlanID, uID user.UserID, title, desc string, cID ctg
 		contractType: contractType,
 		consultType:  consultType,
 		status:       stat,
-		proposal:     proposal,
-		contract:     contract,
 	}
 
 	err := mp.ValidateMentorPlanTitle(title)
