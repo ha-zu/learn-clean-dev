@@ -3,7 +3,6 @@ package mentor
 import (
 	"unicode/utf8"
 
-	"github.com/ha-zu/learn-clean-dev/src/entity"
 	ctg "github.com/ha-zu/learn-clean-dev/src/entity/category"
 	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 	cs "github.com/ha-zu/learn-clean-dev/src/entity/planconsulttype"
@@ -99,7 +98,7 @@ func (m *MentorPlan) ValidateMentorPlanDescription(desc string) error {
 
 func (m *MentorPlan) ValidateMentorPlanPrice(price uint64) error {
 
-	if price < entity.PLAN_PRICE_BASE {
+	if price < MENTOR_PLAN_BASE_PRICE {
 		return custerr.ErrNotEnoughValue
 	}
 
