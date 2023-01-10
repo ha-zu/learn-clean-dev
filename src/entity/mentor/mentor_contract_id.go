@@ -1,15 +1,22 @@
 package mentor
 
-import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+import (
+	"github.com/google/uuid"
+	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+)
 
 type MentorContractID string
 
-func NewMentorContractID(id MentorContractID) error {
+func NewMentorContractID() MentorContractID {
+	return MentorContractID(uuid.New().String())
+}
+
+func NewMentorContractIDStr(id string) (MentorContractID, error) {
 
 	if id == "" {
-		return custerr.ErrEmptyValue
+		return MentorContractID(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return MentorContractID(id), nil
 
 }
