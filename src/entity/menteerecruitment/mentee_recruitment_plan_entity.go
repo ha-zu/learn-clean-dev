@@ -13,20 +13,18 @@ import (
 )
 
 type MenteeRecruitmentPlan struct {
-	id                 MenteeRecruitmentPlanID
-	userID             user.UserID
-	title              string
-	categoryID         ctg.CategoryID
-	contractType       ct.ContractType
-	consultType        cs.ConsultType
-	status             st.PlanStatus
-	description        string
-	priceFrom          uint64
-	priceTo            uint64
-	termFrom           time.Time
-	termTo             time.Time
-	menteeContractList []MenteeRecruitentPlanContract
-	menteeProposalList []MenteeRecruitentPlanProposal
+	id           MenteeRecruitmentPlanID
+	userID       user.UserID
+	title        string
+	categoryID   ctg.CategoryID
+	contractType ct.ContractType
+	consultType  cs.ConsultType
+	status       st.PlanStatus
+	description  string
+	priceFrom    uint64
+	priceTo      uint64
+	termFrom     time.Time
+	termTo       time.Time
 }
 
 const (
@@ -38,18 +36,15 @@ const (
 
 func NewMenteeRecruitmentPlan(id MenteeRecruitmentPlanID, usrID user.UserID, title string, ctgID ctg.CategoryID,
 	contractType ct.ContractType, consultType cs.ConsultType, stat st.PlanStatus,
-	desc string, priceFrom, priceTo uint64, termFrom, termTo time.Time,
-	contractList []MenteeRecruitentPlanContract, proposalList []MenteeRecruitentPlanProposal) (*MenteeRecruitmentPlan, error) {
+	desc string, priceFrom, priceTo uint64, termFrom, termTo time.Time) (*MenteeRecruitmentPlan, error) {
 
 	plan := &MenteeRecruitmentPlan{
-		id:                 id,
-		userID:             usrID,
-		categoryID:         ctgID,
-		contractType:       contractType,
-		consultType:        consultType,
-		status:             stat,
-		menteeContractList: contractList,
-		menteeProposalList: proposalList,
+		id:           id,
+		userID:       usrID,
+		categoryID:   ctgID,
+		contractType: contractType,
+		consultType:  consultType,
+		status:       stat,
 	}
 
 	err := plan.ValidatesMenteeRecruitmentPlanTitle(title)
