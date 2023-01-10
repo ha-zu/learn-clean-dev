@@ -4,12 +4,12 @@ import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
 
 type TagName string
 
-func NewTagName(name TagName) error {
+func NewTagName(name string) (TagName, error) {
 
 	if name == "" {
-		return custerr.ErrEmptyValue
+		return TagName(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return TagName(name), nil
 
 }
