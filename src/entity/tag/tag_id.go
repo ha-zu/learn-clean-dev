@@ -1,15 +1,22 @@
 package tag
 
-import custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+import (
+	"github.com/google/uuid"
+	custerr "github.com/ha-zu/learn-clean-dev/src/entity/customerror"
+)
 
 type TagID string
 
-func NewTagID(id TagID) error {
+func NewTagID() TagID {
+	return TagID(uuid.New().String())
+}
+
+func NewTagIDStr(id TagID) (TagID, error) {
 
 	if id == "" {
-		return custerr.ErrEmptyValue
+		return TagID(""), custerr.ErrEmptyValue
 	}
 
-	return nil
+	return TagID(id), nil
 
 }
